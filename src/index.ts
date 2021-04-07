@@ -119,7 +119,7 @@ app.get("/", (req, res) => {
 
 app.listen(port, "0.0.0.0")
 
-if (process.env.NODE_ENV !== "Production") {
+if (process.env.NODE_ENV !== "production") {
     async function checkMainStorage() {
         console.log(mainStorage)
         console.log(mainStorage.length)

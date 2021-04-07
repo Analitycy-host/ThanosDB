@@ -28,7 +28,6 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "body-parser": "^1.0.3",
     "nanoexpress": "^2.4.13"
   }
 }
