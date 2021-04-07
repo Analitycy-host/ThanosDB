@@ -1,1 +1,15 @@
-ThanosDB
+<p align="center">
+    <img src="https://github.com/Analitycy-host/ThanosDB/blob/master/img/snap.jpg?raw=true" width="200" />
+</p>
+
+<h1 align="center">ThanosDB</h1>
+
+<h3 align="center">Shiity [Redis](https://github.com/redis/redis) Knock-off</h3>
+
+## Information
+
+ThanosDB is Redis-like database built on top of Node.js and [NanoExpress](https://github.com/nanoexpress/nanoexpress).
+
+### License
+
+[GPL-3.0](https://github.com/Analitycy-host/ThanosDB/blob/master/LICENSE)
