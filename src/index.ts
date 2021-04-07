@@ -1,10 +1,24 @@
-import nexpress from "nanoexpress";
+import express from "express";
+import fs from "fs";
 
-const app = nexpress();
+const app = express();
 //@ts-ignore
 const port:number = process.env.PORT || 8080
+//@ts-ignore
+const persistent:boolean = process.env.PERSISTENT || false
 
 let mainStorage:object[] = []
+
+if (persistent) {
+    try {
+        const rawJson = fs.readFileSync("save.jsont");
+        const parsedJson:object[] = JSON.parse(rawJson.toString())
+        parsedJson.forEach(object => {
+        mainStorage.push(object)
+        })
+    } catch {}
+}
+app.use(express.json())
 
 app.get("/", (req, res) => {
     res.status(200)
@@ -15,29 +29,16 @@ app.get("/", (req, res) => {
 })
 
 .post("/key/:keyName", (req, res) => {
-    //@ts-ignore
     let { keyName } = req.params;
-    let bodyUnParsed = req.body
-    try {
-        //@ts-ignore
-        var body = JSON.parse(bodyUnParsed)
-    } catch {
-        res.status(400);
-        return res.json({
-            status: 400,
-            message: "Value is not JSON string"
-        })
-    }
-    //@ts-ignore
-    if (!body || !body.value) {
+    let { value } = req.body
+    console.log(req.body.value)
+    if (value === undefined) {
         res.status(400);
         return res.json({
             status: 400,
             message: "No value specified"
         })
     }
-    //@ts-ignore
-    let { value } = body
     const isAlreadyDeclared = mainStorage.findIndex((array:any) => array.keyName === keyName)
     if (isAlreadyDeclared > -1) {
         mainStorage[isAlreadyDeclared] = {
@@ -62,8 +63,7 @@ app.get("/", (req, res) => {
     let { keyName } = req.params;
     let isAlreadyDeclared = mainStorage.findIndex((array:any) => array.keyName == keyName)
     if (isAlreadyDeclared > -1) {
-        res.status(200)
-        return res.json({
+        return res.status(200).json({
             status: 200,
             key: mainStorage[isAlreadyDeclared]
         })
@@ -75,7 +75,7 @@ app.get("/", (req, res) => {
     })
 })
 
-.del("/key/:keyName", (req, res) => {
+.delete("/key/:keyName", (req, res) => {
     //@ts-ignore
     let { keyName } = req.params;
     const isAlreadyDeclared = mainStorage.findIndex((array:any) => array.keyName == keyName)
@@ -97,8 +97,7 @@ app.get("/", (req, res) => {
 .get("/keys", (req, res) => {
     let numberOfKeys = mainStorage.length
     if (numberOfKeys === 0) {
-        res.status(200)
-        return res.json({
+        return res.status(200).json({
             status: 200,
             numberOfKeys,
             keys: []
@@ -109,21 +108,52 @@ app.get("/", (req, res) => {
         //@ts-ignore
         keys.push(key.keyName)
     })
-    res.status(200)
-    return res.json({
+    return res.status(200).json({
         status: 200,
         numberOfKeys,
         keys
     })
 })
 
-app.listen(port, "0.0.0.0")
+.delete("/drop", (req, res) => {
+    mainStorage = []
+    res.status(200).json({
+        status: 200,
+        message: "Values dropped"
+    })
+})
+
+.get("/dump", (req, res) => {
+    res.status(200).json({
+        status: 200,
+        dump: mainStorage
+    })
+})
+
+app.listen(port, () => {
+    console.log(`[Server]: Listening on ${port}`)
+})
+
+if (persistent) {
+    function saveToFile() {
+        fs.writeFileSync("save.jsont", JSON.stringify(mainStorage))
+    }
+    
+    process.on("SIGINT", () => {
+        saveToFile()
+    })
+    
+    process.on("beforeExit", () => {
+        saveToFile()
+    })
+    
+    setInterval(saveToFile, 5000)
+}
 
 if (process.env.NODE_ENV !== "production") {
     async function checkMainStorage() {
         console.log(mainStorage)
         console.log(mainStorage.length)
     }
-    
     setInterval(checkMainStorage, 1000)
 }
