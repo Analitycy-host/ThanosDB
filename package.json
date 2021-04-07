@@ -1,0 +1,34 @@
+{
+  "name": "thanosdb",
+  "version": "0.0.2",
+  "description": "ThanosDB - Shitty Redis knock-off",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./build/index.js",
+    "build": "tsc",
+    "dev": "nodemon -r dotenv/config  ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Analitycy-host/ThanosDB.git"
+  },
+  "keywords": [],
+  "author": "mrtalon63 <marcin@czop.ru>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Analitycy-host/ThanosDB/issues"
+  },
+  "homepage": "https://github.com/Analitycy-host/ThanosDB#readme",
+  "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/node": "^14.14.37",
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.7",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.0.3",
+    "nanoexpress": "^2.4.13"
+  }
+}
