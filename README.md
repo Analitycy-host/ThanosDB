@@ -4,7 +4,7 @@
 
 <h1 align="center">ThanosDB</h1>
 
-<h3 align="center">Shiity [Redis](https://github.com/redis/redis) Knock-off</h3>
+<h3 align="center">Shity <a href="https://github.com/redis/redis">Redis</a> Knock-off</h3>
 
 ## Information
 
